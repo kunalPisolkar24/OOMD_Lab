@@ -1,0 +1,52 @@
+@startuml
+left to right direction
+actor User
+actor "Admin" as Admin
+
+rectangle "Telephone Line Application" {
+    usecase "Register/Login" as UC1
+    usecase "Manage Contacts" as UC2
+    usecase "Make/Receive Calls" as UC3
+    usecase "Voicemail Management" as UC4
+    usecase "Call Hold" as UC5
+    usecase "Transfer Calls" as UC6
+    usecase "Conference Call" as UC7
+    usecase "Call History" as UC8
+    usecase "Block Calls" as UC9
+    usecase "Receive Call Notifications" as UC10
+    usecase "Record Calls" as UC11
+    usecase "IVR (Interactive Voice Response)" as UC12
+    usecase "Call Forwarding" as UC13
+    usecase "Emergency Call" as UC14
+    usecase "Caller ID/Lookup" as UC16
+    usecase "Manage Billing" as UC17
+    usecase "SMS/MMS Support" as UC18
+}
+
+User -- UC1
+User -- UC2
+User -- UC3
+User -- UC4
+User -- UC8
+User -- UC9
+User -- UC10
+User -- UC14
+User -- UC16
+User -- UC18
+
+Admin -- UC9
+Admin -- UC17
+
+
+UC3 <|-- UC5 : <<extend>>
+UC3 <|-- UC6 : <<extend>>
+UC3 <|-- UC7 : <<extend>>
+UC3 <|-- UC11 : <<extend>>
+UC3 <|-- UC13 : <<extend>>
+
+UC1 -- UC2 : <<include>>
+UC1 -- UC16 : <<include>>
+UC3 -- UC10 : <<include>>
+UC3 -- UC14 : <<include>>
+
+@enduml

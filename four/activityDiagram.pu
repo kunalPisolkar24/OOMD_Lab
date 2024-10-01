@@ -1,0 +1,40 @@
+@startuml
+start
+
+:User logs in;
+:User selects a contact;
+if (Is contact found?) then (yes)
+  :Display contact details;
+  :User initiates call;
+  if (Is the call connected?) then (yes)
+    :Call in progress;
+    if (User holds call?) then (yes)
+      :Call is on hold;
+    endif
+    if (User transfers call?) then (yes)
+      :Call transferred to another contact;
+    endif
+    if (User starts conference?) then (yes)
+      :Conference call started;
+    endif
+    if (User records call?) then (yes)
+      :Call recording started;
+    endif
+    :End call;
+  else (no)
+    :Call failed;
+    :Notify user;
+  endif
+else (no)
+  :Contact not found;
+  :Notify user;
+endif
+
+:Update call history;
+if (Is voicemail?) then (yes)
+  :Notify voicemail received;
+  :User checks voicemail;
+endif
+
+stop
+@enduml
