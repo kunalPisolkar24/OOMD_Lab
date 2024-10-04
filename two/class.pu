@@ -1,0 +1,151 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor LightBlue
+    ArrowColor DarkBlue
+    BorderColor DarkBlue
+}
+
+title Telephone Line Application - Class Diagram
+
+abstract class User {
+    -userID: String
+    -name: String
+    -phoneNumber: String
+    -email: String
+    +login()
+    +logout()
+    +updateProfile()
+}
+
+class RegularUser extends User {
+    -contactList: List<Contact>
+    +makeCall(contact: Contact)
+    +receiveCall(caller: User)
+    +sendMessage(recipient: Contact, content: String)
+    +checkVoicemail()
+    +viewCallHistory()
+}
+
+class AdminUser extends User {
+    +manageBilling()
+    +generateReports()
+    +manageSystemSettings()
+}
+
+class Contact {
+    -contactID: String
+    -name: String
+    -phoneNumber: String
+    -email: String
+    +updateDetails()
+}
+
+class Call {
+    -callID: String
+    -caller: User
+    -recipient: User
+    -startTime: DateTime
+    -endTime: DateTime
+    -duration: Int
+    -status: CallStatus
+    +initiateCall()
+    +endCall()
+    +holdCall()
+    +resumeCall()
+    +transferCall(newRecipient: User)
+}
+
+enum CallStatus {
+    ACTIVE
+    ON_HOLD
+    ENDED
+    FAILED
+}
+
+class ConferenceCall extends Call {
+    -participants: List<User>
+    +addParticipant(user: User)
+    +removeParticipant(user: User)
+}
+
+class VoicemailBox {
+    -ownerID: String
+    -messages: List<VoicemailMessage>
+    +leaveMessage(caller: User, content: AudioFile)
+    +playMessage(messageID: String)
+    +deleteMessage(messageID: String)
+}
+
+class VoicemailMessage {
+    -messageID: String
+    -caller: User
+    -content: AudioFile
+    -timestamp: DateTime
+    +play()
+    +delete()
+}
+
+class CallHistory {
+    -userID: String
+    -calls: List<Call>
+    +addCall(call: Call)
+    +getCalls(filterCriteria: FilterCriteria)
+    +deleteCall(callID: String)
+}
+
+class Message {
+    -messageID: String
+    -sender: User
+    -recipient: User
+    -content: String
+    -timestamp: DateTime
+    -status: MessageStatus
+    +send()
+    +markAsRead()
+}
+
+enum MessageStatus {
+    SENT
+    DELIVERED
+    READ
+}
+
+class CallForwarding {
+    -userID: String
+    -forwardToNumber: String
+    -isActive: Boolean
+    +activate()
+    +deactivate()
+    +updateForwardNumber(newNumber: String)
+}
+
+class DoNotDisturb {
+    -userID: String
+    -isActive: Boolean
+    -scheduleStart: Time
+    -scheduleEnd: Time
+    +activate()
+    +deactivate()
+    +updateSchedule(start: Time, end: Time)
+}
+
+class EmergencyService {
+    -emergencyNumber: String
+    +callEmergency()
+}
+
+User "1" -- "0..*" Contact : has
+RegularUser "1" -- "1" CallHistory : has
+RegularUser "1" -- "1" VoicemailBox : has
+RegularUser "1" -- "0..*" Call : participates in
+Call "1" -- "2..*" User : involves
+ConferenceCall "1" -- "3..*" User : involves
+RegularUser "1" -- "0..*" Message : sends/receives
+RegularUser "1" -- "0..1" CallForwarding : configures
+RegularUser "1" -- "0..1" DoNotDisturb : sets
+VoicemailBox "1" -- "0..*" VoicemailMessage : contains
+CallHistory "1" -- "0..*" Call : records
+User "1" -- "1" EmergencyService : accesses
+
+@enduml
