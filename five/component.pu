@@ -1,0 +1,121 @@
+@startuml
+skinparam component {
+  BackgroundColor LightSkyBlue
+  BorderColor DarkBlue
+  ArrowColor DarkBlue
+  FontName Arial
+  FontSize 12
+}
+
+title Telephone Line Application - Component Diagram
+
+package "User Interface" {
+  [Web Interface]
+  [Mobile App]
+}
+
+package "Core Application" {
+  [User Management]
+  [Call Management]
+  [Messaging System]
+  [Contact Management]
+  [Voicemail System]
+  [Call History]
+  [Billing System]
+  [Emergency Services]
+}
+
+package "External Systems" {
+  [Payment Gateway]
+  [SMS Gateway]
+  [Email Service]
+}
+
+package "Data Storage" {
+  database "User Database"
+  database "Call Records"
+  database "Message Store"
+  database "Voicemail Store"
+}
+
+package "Security" {
+  [Authentication Service]
+  [Encryption Module]
+}
+
+package "Network Services" {
+  [VoIP Server]
+  [SIP Server]
+}
+
+package "Admin Tools" {
+  [Admin Dashboard]
+  [Reporting Tools]
+}
+
+cloud "Public Telephone Network" {
+  [PSTN Gateway]
+}
+
+[Web Interface] --> [User Management]
+[Mobile App] --> [User Management]
+
+[User Management] --> [Authentication Service]
+[User Management] ..> [User Database] : reads/writes
+
+[Call Management] --> [VoIP Server]
+[Call Management] --> [SIP Server]
+[Call Management] ..> [Call Records] : writes
+
+[Messaging System] --> [SMS Gateway]
+[Messaging System] ..> [Message Store] : reads/writes
+
+[Contact Management] ..> [User Database] : reads/writes
+
+[Voicemail System] ..> [Voicemail Store] : reads/writes
+
+[Call History] ..> [Call Records] : reads
+
+[Billing System] --> [Payment Gateway]
+[Billing System] ..> [Call Records] : reads
+
+[Emergency Services] --> [PSTN Gateway]
+
+[VoIP Server] --> [PSTN Gateway]
+[SIP Server] --> [PSTN Gateway]
+
+[Admin Dashboard] --> [User Management]
+[Admin Dashboard] --> [Billing System]
+[Admin Dashboard] --> [Reporting Tools]
+
+[Reporting Tools] ..> [Call Records] : reads
+[Reporting Tools] ..> [Message Store] : reads
+[Reporting Tools] ..> [User Database] : reads
+
+[Authentication Service] --> [Encryption Module]
+
+[User Management] --> [Email Service]
+
+interface "User Interface API" as UI_API
+[Web Interface] --(UI_API
+[Mobile App] --(UI_API
+
+interface "Admin API" as ADMIN_API
+[Admin Dashboard] --(ADMIN_API
+
+interface "Telephony API" as TEL_API
+[Call Management] --(TEL_API
+[VoIP Server] --(TEL_API
+[SIP Server] --(TEL_API
+
+interface "Messaging API" as MSG_API
+[Messaging System] --(MSG_API
+[SMS Gateway] --(MSG_API
+
+interface "Database API" as DB_API
+[User Database] --(DB_API
+[Call Records] --(DB_API
+[Message Store] --(DB_API
+[Voicemail Store] --(DB_API
+
+@enduml
